@@ -28,6 +28,10 @@
 #include "php_siphash.h"
 #include "siphash-impl.h"
 
+#ifndef WORDS_BIGENDIAN
+# include <arpa/inet.h>
+#endif
+
 const zend_function_entry siphash_functions[] = {
 	PHP_FE(sip_hash, NULL)
 	PHP_FE(sip_hash32, NULL)
@@ -87,7 +91,33 @@ PHP_MINFO_FUNCTION(siphash)
 
 PHP_FUNCTION(sip_hash)
 {
-    RETURN_FALSE;
+    char     *key = NULL;
+    char     *message = NULL;
+    uint64_t  hash;
+    int       key_size;
+    int       message_size;
+
+    if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "ss",
+                              &key, &key_size,
+                              &message, &message_size) == FAILURE) {
+        return;
+    }
+    if (key_size != 16) {
+        php_error_docref(NULL TSRMLS_CC, E_WARNING, "Bad key length");
+        RETURN_FALSE;
+    }
+    if (message_size < 0) {
+        php_error_docref(NULL TSRMLS_CC, E_WARNING, "Empty message");
+        RETURN_FALSE;
+    }
+    hash = siphash((unsigned char *) key,
+                   (const unsigned char *) message, (size_t) message_size);
+#ifdef WORDS_BIGENDIAN
+    hash = (((uint64_t) htonl((uint32_t) hash)) << 32) |
+        htonl((uint32_t) (hash >> 32));
+#endif
+
+    RETURN_STRINGL((void *) &hash, sizeof hash, 1);
 }
 
 PHP_FUNCTION(sip_hash32)
