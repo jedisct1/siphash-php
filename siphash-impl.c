@@ -1,15 +1,21 @@
 
 #include "siphash-impl.h"
 
-#define ROTL64(a,b) (((a)<<(b))|((a)>>(64-b)))
+#if defined(_MSC_VER)
+# define INLINE __forceinline
+# define ROTL64(a,b) _rotl64(a,b)
+#else
+# define INLINE __attribute__((always_inline))
+# define ROTL64(a,b) (((a)<<(b))|((a)>>(64-b)))
+#endif
 
-static uint64_t __attribute__((always_inline))
-U8TO64_LE(const unsigned char *p) {
+static uint64_t INLINE U8TO64_LE(const unsigned char *p)
+{
 	return *(const uint64_t *)(const void *)p;
 }
 
-uint64_t
-siphash(unsigned char key[16], const unsigned char *m, size_t len) {
+uint64_t siphash(unsigned char key[16], const unsigned char *m, size_t len)
+{
 	uint64_t v0, v1, v2, v3;
 	uint64_t mi, k0, k1;
 	unsigned char buf[8];
