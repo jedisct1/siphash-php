@@ -13,6 +13,8 @@ outputs `siphash-2-4(key, message)` as a 8-byte string.
 
 truncates the value and outputs a 32-bit integer.
 
+The `key` should be a 16 bytes string.
+
 Installation
 ============
 
