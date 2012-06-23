@@ -42,36 +42,16 @@ PHP_RINIT_FUNCTION(siphash);
 PHP_RSHUTDOWN_FUNCTION(siphash);
 PHP_MINFO_FUNCTION(siphash);
 
-PHP_FUNCTION(confirm_siphash_compiled);	/* For testing, remove later. */
-
-/* 
-  	Declare any global variables you may need between the BEGIN
-	and END macros here:     
-
-ZEND_BEGIN_MODULE_GLOBALS(siphash)
-	long  global_value;
-	char *global_string;
-ZEND_END_MODULE_GLOBALS(siphash)
-*/
-
-/* In every utility function you add that needs to use variables 
-   in php_siphash_globals, call TSRMLS_FETCH(); after declaring other 
-   variables used by that function, or better yet, pass in TSRMLS_CC
-   after the last function argument and declare your utility function
-   with TSRMLS_DC after the last declared argument.  Always refer to
-   the globals in your function as SIPHASH_G(variable).  You are 
-   encouraged to rename these macros something shorter, see
-   examples in any other php module directory.
-*/
-
 #ifdef ZTS
 #define SIPHASH_G(v) TSRMG(siphash_globals_id, zend_siphash_globals *, v)
 #else
 #define SIPHASH_G(v) (siphash_globals.v)
 #endif
 
-#endif	/* PHP_SIPHASH_H */
+PHP_FUNCTION(sip_hash);
+PHP_FUNCTION(sip_hash_hex);
 
+#endif	/* PHP_SIPHASH_H */
 
 /*
  * Local variables:
