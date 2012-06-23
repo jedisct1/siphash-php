@@ -1,10 +1,10 @@
 --TEST--
-Check sip_hash32()
+Check sip_hash()
 --SKIPIF--
 <?php if (!extension_loaded("siphash")) print "skip"; ?>
 --FILE--
 <?php 
-echo dechex(sip_hash32('CAFEBABEDEADBEEF', 'message'))
+echo base64_encode(sip_hash('CAFEBABEDEADBEEF', 'message'))
 ?>
 --EXPECT--
-f7ed0a90
+kArt90NAHXQ=
