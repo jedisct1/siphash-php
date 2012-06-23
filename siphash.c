@@ -26,10 +26,11 @@
 #include "php_ini.h"
 #include "ext/standard/info.h"
 #include "php_siphash.h"
+#include "siphash-impl.h"
 
 const zend_function_entry siphash_functions[] = {
 	PHP_FE(sip_hash, NULL)
-	PHP_FE(sip_hash_hex, NULL)
+	PHP_FE(sip_hash32, NULL)
 	PHP_FE_END
 };
 /* }}} */
@@ -89,9 +90,33 @@ PHP_FUNCTION(sip_hash)
     RETURN_FALSE;
 }
 
-PHP_FUNCTION(sip_hash_hex)
+PHP_FUNCTION(sip_hash32)
 {
-    RETURN_FALSE;
+    char     *key = NULL;
+    char     *message = NULL;
+    uint64_t  hash;
+    long      hash32;
+    int       key_size;
+    int       message_size;
+
+    if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "ss",
+                              &key, &key_size,
+                              &message, &message_size) == FAILURE) {
+        return;
+    }
+    if (key_size != 16) {
+        php_error_docref(NULL TSRMLS_CC, E_WARNING, "Bad key length");
+        RETURN_FALSE;
+    }
+    if (message_size < 0) {
+        php_error_docref(NULL TSRMLS_CC, E_WARNING, "Empty message");
+        RETURN_FALSE;
+    }
+    hash = siphash((unsigned char *) key,
+                   (const unsigned char *) message, (size_t) message_size);
+    hash32 = (long) (hash & 0xFFFFFFFF);
+
+    RETURN_LONG(hash32);
 }
 
 /*

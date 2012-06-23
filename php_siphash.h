@@ -49,7 +49,7 @@ PHP_MINFO_FUNCTION(siphash);
 #endif
 
 PHP_FUNCTION(sip_hash);
-PHP_FUNCTION(sip_hash_hex);
+PHP_FUNCTION(sip_hash32);
 
 #endif	/* PHP_SIPHASH_H */
 
