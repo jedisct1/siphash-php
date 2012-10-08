@@ -33,12 +33,12 @@
 #endif
 
 const zend_function_entry siphash_functions[] = {
-	PHP_FE(sip_hash, NULL)
-	PHP_FE(sip_hash32, NULL)
+    PHP_FE(sip_hash, NULL)
+    PHP_FE(sip_hash32, NULL)
 #ifdef PHP_FE_END
-	PHP_FE_END
+    PHP_FE_END
 #else
-	{ NULL, NULL, NULL }
+    { NULL, NULL, NULL }
 #endif
 };
 
@@ -46,19 +46,19 @@ const zend_function_entry siphash_functions[] = {
  */
 zend_module_entry siphash_module_entry = {
 #if ZEND_MODULE_API_NO >= 20010901
-	STANDARD_MODULE_HEADER,
+    STANDARD_MODULE_HEADER,
 #endif
-	"siphash",
-	siphash_functions,
-	PHP_MINIT(siphash),
-	PHP_MSHUTDOWN(siphash),
-	NULL,
-	NULL,
-	PHP_MINFO(siphash),
+    "siphash",
+    siphash_functions,
+    PHP_MINIT(siphash),
+    PHP_MSHUTDOWN(siphash),
+    NULL,
+    NULL,
+    PHP_MINFO(siphash),
 #if ZEND_MODULE_API_NO >= 20010901
-	"1.0",
+    "1.0",
 #endif
-	STANDARD_MODULE_PROPERTIES
+    STANDARD_MODULE_PROPERTIES
 };
 /* }}} */
 
@@ -70,7 +70,7 @@ ZEND_GET_MODULE(siphash)
  */
 PHP_MINIT_FUNCTION(siphash)
 {
-	return SUCCESS;
+    return SUCCESS;
 }
 /* }}} */
 
@@ -78,7 +78,7 @@ PHP_MINIT_FUNCTION(siphash)
  */
 PHP_MSHUTDOWN_FUNCTION(siphash)
 {
-	return SUCCESS;
+    return SUCCESS;
 }
 /* }}} */
 
@@ -86,9 +86,9 @@ PHP_MSHUTDOWN_FUNCTION(siphash)
  */
 PHP_MINFO_FUNCTION(siphash)
 {
-	php_info_print_table_start();
-	php_info_print_table_header(2, "siphash support", "enabled");
-	php_info_print_table_end();
+    php_info_print_table_start();
+    php_info_print_table_header(2, "siphash support", "enabled");
+    php_info_print_table_end();
 }
 /* }}} */
 
