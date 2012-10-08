@@ -35,9 +35,12 @@
 const zend_function_entry siphash_functions[] = {
 	PHP_FE(sip_hash, NULL)
 	PHP_FE(sip_hash32, NULL)
+#ifdef PHP_FE_END
 	PHP_FE_END
+#else
+	{ NULL, NULL, NULL }
+#endif
 };
-/* }}} */
 
 /* {{{ siphash_module_entry
  */
