@@ -32,6 +32,19 @@
 # include <arpa/inet.h>
 #endif
 
+#if PHP_MAJOR_VERSION >= 7
+typedef size_t strsize_t;
+#else
+typedef int strsize_t;
+
+# undef  RETURN_STRING
+# define RETURN_STRING(s) \
+    do { \
+        RETVAL_STRING((s), 1); \
+        return; \
+    } while(0)
+#endif
+
 const zend_function_entry siphash_functions[] = {
     PHP_FE(sip_hash, NULL)
     PHP_FE(sip_hash32, NULL)
@@ -96,9 +109,12 @@ PHP_FUNCTION(sip_hash)
 {
     char     *key = NULL;
     char     *message = NULL;
-    uint64_t  hash;
-    int       key_size;
-    int       message_size;
+    struct {
+        uint64_t      hash;
+        unsigned char eos;
+    }         res;
+    strsize_t key_size;
+    strsize_t message_size;
 
     if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "ss",
                               &key, &key_size,
@@ -113,14 +129,15 @@ PHP_FUNCTION(sip_hash)
         php_error_docref(NULL TSRMLS_CC, E_WARNING, "Empty message");
         RETURN_FALSE;
     }
-    hash = siphash((unsigned char *) key,
+    memset(&res, 0, sizeof res);
+    res.hash = siphash((unsigned char *) key,
                    (const unsigned char *) message, (size_t) message_size);
 #ifdef WORDS_BIGENDIAN
-    hash = (((uint64_t) htonl((uint32_t) hash)) << 32) |
-        htonl((uint32_t) (hash >> 32));
+    res.hash = (((uint64_t) htonl((uint32_t) res.hash)) << 32) |
+        htonl((uint32_t) (res.hash >> 32));
 #endif
 
-    RETURN_STRINGL((void *) &hash, sizeof hash, 1);
+    RETURN_STRING((void *) &res);
 }
 
 PHP_FUNCTION(sip_hash32)
@@ -129,8 +146,8 @@ PHP_FUNCTION(sip_hash32)
     char     *message = NULL;
     uint64_t  hash;
     long      hash32;
-    int       key_size;
-    int       message_size;
+    strsize_t key_size;
+    strsize_t message_size;
 
     if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "ss",
                               &key, &key_size,
