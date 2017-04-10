@@ -32,3 +32,5 @@ And add `extension=siphash.so` to your php.ini configuration file.
 
 This PHP extension uses FloodyBerry's
 [basic implementation](https://github.com/floodyberry/siphash)
+
+PHP 5.6+ and PHP 7.0+ are fully supported.
