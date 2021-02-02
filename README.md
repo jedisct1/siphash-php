@@ -1,7 +1,7 @@
 SipHash for PHP
 ===============
 
-[SipHash](http://131002.net/siphash/) extension for PHP.
+[SipHash](https://www.aumasson.jp/siphash/siphash.pdf) extension for PHP.
 
 > SipHash is a family of pseudorandom functions optimized for short
 > inputs. Target applications include network traffic authentication and
